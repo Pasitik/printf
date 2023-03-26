@@ -6,6 +6,6 @@
 #include <stdarg.h>
 
 void _putchar(char *c);
-int _printf(const char *format, ...);
 int _strlen(char *s);
+int _printf(const char *format, ...);
 #endif /* MAIN_H */
