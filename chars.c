@@ -20,7 +20,7 @@ int _printf(const char *format, ...)
 			i++;
 			if (*(format + i) == 'c')
 			{
-				char c = va_arg(args, char *);
+				char *c = va_arg(args, char *);
 
 				_putchar(c);
 			}
@@ -35,13 +35,14 @@ int _printf(const char *format, ...)
 			else
 			{
 				i--;
-				_putchar(*(format + i));
-				write(STDOUT_FILENO, *(format + i), 1);
+				write(STDOUT_FILENO, format, 1);
 			}
 		}
 		else
 		{
-			_putchar(*(format + i));
+			char *s = (char *)(intptr_t) *(format + i);
+
+			write(STDOUT_FILENO, &s, 1);
 		}
 		i++;
 	}

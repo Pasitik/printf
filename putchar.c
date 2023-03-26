@@ -7,7 +7,7 @@
  * @c: ...
  * Return: ...
  */
-void _putchar(char c)
+void _putchar(char *c)
 {
 	write(STDOUT_FILENO, &c, 1);
 } 

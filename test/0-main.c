@@ -1,16 +1,10 @@
-#include <limits.h>
-#include <stdio.h>
-#include "../main.h"
+#include "main.h"
 
-/**
- * main - Entry point
- *
- * Return: Always 0
- */
-int main(void)
-{
-	char a = 'H';
-	_printf("%c", a);
+int main() {
+    // Write C code here
+    char *a = "dsds";
+    char b ='U';
+    _printf("%s100%%c\n", a, b);
 
-    return (0);
+    return 0;
 }
