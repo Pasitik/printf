@@ -60,6 +60,7 @@ int _strlen(char *s)
 void print_arg(char format, va_list args, int *count)
 {
 	char arg;
+	char *arg_str;
 	int len;
 
 	switch (format)
@@ -73,12 +74,12 @@ void print_arg(char format, va_list args, int *count)
 		}
 		case 's':
 		{
-			arg = *va_arg(args, char *);
-			if (arg != NULL)
+			arg_str = va_arg(args, char *);
+			if (arg_str != NULL)
 			{
-				len = _strlen(&arg);
+				len = _strlen(arg_str);
 
-				write(STDOUT_FILENO, &arg, len);
+				write(STDOUT_FILENO, arg_str, len);
 				(*count) += len;
 			}
 			break;
