@@ -7,10 +7,10 @@
  */
 int _printf(const char *format, ...)
 {
+	int count = 0;
 	va_list args;
 
 	va_start(args, format);
-	int count = 0;
 
 	while (*format != '\0')
 	{
@@ -57,6 +57,7 @@ int _strlen(char *s)
 void print_arg(char format, va_list args, int *count)
 {
 	char arg;
+	int len;
 
 	switch (format)
 	{
@@ -70,7 +71,7 @@ void print_arg(char format, va_list args, int *count)
 		case 's':
 		{
 			arg = *va_arg(args, char *);
-			int len = _strlen(&arg);
+			len = _strlen(&arg);
 
 			write(STDOUT_FILENO, &arg, len);
 			(*count) += len;
