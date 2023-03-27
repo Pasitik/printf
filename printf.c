@@ -8,61 +8,47 @@
  */
 int _printf(const char *format, ...)
 {
-	int i, len;
 	va_list args;
-
 	va_start(args, format);
-	while (*(format + i) != '\0')
+	int count = 0;
+	while (*format != '\0')
 	{
-		if (*(format + i) == '%')
+		if (*format == '%')
 		{
-
-			i++;
-			if (*(format + i) == 'c')
+			switch (*(++format))
 			{
-				char *c = va_arg(args, char *);
-
-				_putchar(c);
-			}
-
-			else if (*(format + i) == 's')
-			{
-				char *s = va_arg(args, char *);
-
-				write(STDOUT_FILENO, s, _strlen(s));
-			}
-
-			else
-			{
-				i--;
-				write(STDOUT_FILENO, format, 1);
+				case 'c':
+				{
+					char c = (char) va_arg(args, int);
+					write(STDOUT_FILENO, &c, 1);
+					count++;
+					break;
+				}
+				case 's':
+				{
+					char *s = va_arg(args, char *);
+					int len = strlen(s);
+					write(STDOUT_FILENO, s, len);
+					count += len;
+					break;
+				}
+				case '%':
+				{
+					char percent = '%';
+					write(STDOUT_FILENO, &percent, 1);
+					count++;
+					break;
+				}
 			}
 		}
-		else
+		else 
 		{
-			char *s = (char *)(intptr_t) *(format + i);
-
-			write(STDOUT_FILENO, &s, 1);
+			write(STDOUT_FILENO, format, 1);
+			count++;
 		}
-		i++;
+		format++;
 	}
 	va_end(args);
-	return (0);
+	return (count);
 }
 
-/**
- * _strlen - ...
- *
- * @s: ...
- * Return: ...
- */
-int _strlen(char *s)
-{
-	int i = 0;
-
-	while (*(s + i) != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
