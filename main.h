@@ -8,6 +8,8 @@
 #include <limits.h>
 
 void _putchar(char *c);
+char *itoa(int n, int dig);
+int num_count(int n);
 int _strlen(char *s);
 int _print_integer(int n);
 void print_arg(char format, va_list args, int *count);
