@@ -1,5 +1,4 @@
 #include "main.h"
-
 /**
  * _printf - ...
  *
@@ -9,39 +8,17 @@
 int _printf(const char *format, ...)
 {
 	va_list args;
+
 	va_start(args, format);
 	int count = 0;
+
 	while (*format != '\0')
 	{
 		if (*format == '%')
 		{
-			switch (*(++format))
-			{
-				case 'c':
-				{
-					char c = (char) va_arg(args, int);
-					write(STDOUT_FILENO, &c, 1);
-					count++;
-					break;
-				}
-				case 's':
-				{
-					char *s = va_arg(args, char *);
-					int len = _strlen(s);
-					write(STDOUT_FILENO, s, len);
-					count += len;
-					break;
-				}
-				case '%':
-				{
-					char percent = '%';
-					write(STDOUT_FILENO, &percent, 1);
-					count++;
-					break;
-				}
-			}
+			print_arg(*(++format), args, &count);
 		}
-		else 
+		else
 		{
 			write(STDOUT_FILENO, format, 1);
 			count++;
@@ -53,12 +30,13 @@ int _printf(const char *format, ...)
 }
 
 /**
- * strlen - ...
+ * _strlen - ...
  *
  * @s: ...
  * Return: ...
  */
-int _strlen(char *s){
+int _strlen(char *s)
+{
 	int i = 0;
 
 	while (*(s + i) != '\0')
@@ -67,3 +45,44 @@ int _strlen(char *s){
 	}
 	return (i);
 }
+
+/**
+ * print_arg - ...
+ *
+ * @format: ...
+ * @args: ...
+ * @count: ...
+ * Return: ...
+ */
+void print_arg(char format, va_list args, int *count)
+{
+	char arg;
+
+	switch (format)
+	{
+		case 'c':
+		{
+			arg = (char) va_arg(args, int);
+			write(STDOUT_FILENO, &arg, 1);
+			(*count)++;
+			break;
+		}
+		case 's':
+		{
+			arg = *va_arg(args, char *);
+			int len = _strlen(&arg);
+
+			write(STDOUT_FILENO, &arg, len);
+			(*count) += len;
+			break;
+		}
+		case '%':
+		{
+			arg = '%';
+			write(STDOUT_FILENO, &arg, 1);
+			(*count)++;
+			break;
+		}
+	}
+}
+
