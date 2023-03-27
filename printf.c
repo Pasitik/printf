@@ -27,7 +27,7 @@ int _printf(const char *format, ...)
 				case 's':
 				{
 					char *s = va_arg(args, char *);
-					int len = strlen(s);
+					int len = _strlen(s);
 					write(STDOUT_FILENO, s, len);
 					count += len;
 					break;
@@ -52,3 +52,18 @@ int _printf(const char *format, ...)
 	return (count);
 }
 
+/**
+ * strlen - ...
+ *
+ * @s: ...
+ * Return: ...
+ */
+int _strlen(char *s){
+	int i = 0;
+
+	while (*(s + i) != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
