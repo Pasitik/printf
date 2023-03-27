@@ -14,6 +14,9 @@ int _print_integer(int n)
 	int temp, i, count = 0;
 	char *p;
 
+	if (n > INT_MAX || n < INT_MIN)
+		return (-1);
+
 	if (n < 0)
 	{
 		n = n * -1;
@@ -32,13 +35,11 @@ int _print_integer(int n)
 		write(STDOUT_FILENO, "0", 1);
 		count++;
 	}
-
 	p = (char *) malloc(sizeof(char) * dig);
 	if (p == NULL)
 	{
 		return (-1);
 	}
-
 	for (i = dig - 1; i >= 0; i--)
 	{
 		*(p + i) = '0' + n % 10;
