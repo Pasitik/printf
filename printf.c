@@ -84,6 +84,12 @@ void print_arg(char format, va_list args, int *count)
 			}
 			break;
 		}
+		case 'd':
+		case 'i':
+		{
+			_print_integer(va_arg(args, int));
+			break;
+		}
 		case '%':
 		{
 			arg = '%';
