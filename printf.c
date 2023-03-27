@@ -74,10 +74,13 @@ void print_arg(char format, va_list args, int *count)
 		case 's':
 		{
 			arg = *va_arg(args, char *);
-			len = _strlen(&arg);
+			if (arg != NULL)
+			{
+				len = _strlen(&arg);
 
-			write(STDOUT_FILENO, &arg, len);
-			(*count) += len;
+				write(STDOUT_FILENO, &arg, len);
+				(*count) += len;
+			}
 			break;
 		}
 		case '%':
