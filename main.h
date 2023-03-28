@@ -28,5 +28,6 @@ void apply_integer_flags(char **p, int sign, int flags, int width, int precision
 void write_to_output(char *p);
 void add_to_output(char *str, int len);
 void pad_left(char **p, int count, char c);
+void print_d(va_list args, int *count);
 
 #endif /* MAIN_H */
