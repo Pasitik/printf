@@ -2,17 +2,31 @@
 #define MAIN_H
 
 #include <stdio.h>
-#include <unistd.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <unistd.h>
+#include <unistd.h>
 
-void _putchar(char *c);
-char *itoa(int n, int dig);
-int num_count(int n);
+#define FLAG_PLUS 1
+#define FLAG_MINUS 2
+#define FLAG_ZERO 4
+#define FLAG_SPACE 8
+
 int _strlen(char *s);
-int _print_integer(int n);
-void print_arg(char format, va_list args, int *count);
+void _memcpy(char *dest, const char *src, size_t len);
+void _memset(char *str, char pad, size_t width);
+int _print_integer(va_list args, int width, int precision, int flags);
 int _printf(const char *format, ...);
+void pad_left(char **str, int width, char pad);
+int num_count(int n);
+void print_percent(int *count);
+void print_char(va_list args, int* count);
+void print_string(va_list args, int* counto);
+char* int_to_string(int n);
+void apply_integer_flags(char **p, int sign, int flags, int width, int precision);
+void write_to_output(char *p);
+void add_to_output(char *str, int len);
+void pad_left(char **p, int count, char c);
 
 #endif /* MAIN_H */

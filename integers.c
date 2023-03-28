@@ -3,73 +3,44 @@
 /**
  * _print_integer - prints integer to screen.
  *
- * @n: input
+ * @args: ...
+ * @width: ...
+ * @precision: ...
+ * @flags: ...
+ * @length: ...
  *
- * Return: Alwqys 0 (Success)
+ * Return: Always 0 (Success)
  */
 
-int _print_integer(int n)
+int _print_integer(va_list args, int width,
+		int precision, int flags)
 {
-	int dig = 0;
-	int sign = 1, i, count = 0;
+	int n = va_arg(args, int);
+	int sign = 1;
 	char *p;
 
 	if (n < 0)
 	{
 		sign = -1;
 		n = n * -1;
-		count++;
 	}
-	dig += num_count(n);
-	if (n == 0)
-	{
-		p = malloc(2 * sizeof(char));
-		if (p == NULL)
-			exit(1);
-		*(p + 0) = '0';
-		*(p + 1) = '\0';
-	}
-	else
-	{
-		p = itoa(n, dig);
-	}
-	if (sign == -1)
-		write(STDOUT_FILENO, "-", 1);
-	for (i = 0; p[i] != '\0'; i++)
-	{
-		write(STDOUT_FILENO, &p[i], 1);
-		count += 1;
-	}
+
+	p = int_to_string(n);
+	apply_integer_flags(&p, sign, flags, width, precision);
+	write_to_output(p);
 	free(p);
-	return (0);
+
+	return (_strlen(p));
 }
 
 /**
- * num_count - ...
+ * int_to_string - ..
  * @n: ...
  * Return: ...
  */
-int num_count(int n)
+char *int_to_string(int n)
 {
-	int dig = 0;
-	int temp = n;
-
-	while (temp > 0)
-	{
-		dig++;
-		temp = temp / 10;
-	}
-	return (dig);
-}
-
-/**
- * itoa - ...
- * @dig: ...
- * @n: ...
- * Return: ...
- */
-char *itoa(int n, int dig)
-{
+	int dig = num_count(n);
 	int i;
 	char *p = (char *) malloc(sizeof(char) * (dig + 1));
 
@@ -77,11 +48,58 @@ char *itoa(int n, int dig)
 	{
 		exit(1);
 	}
+
 	for (i = dig - 1; i >= 0; i--)
 	{
 		*(p + i) = '0' + n % 10;
 		n = n / 10;
 	}
 	*(p + dig) = '\0';
+
 	return (p);
+}
+
+void apply_integer_flags(char **p, int sign,
+		int flags, int width, int precision)
+{
+	int len = 0;
+
+	if (sign == -1)
+		add_to_output("-", 1);
+	else if (flags & FLAG_PLUS)
+		add_to_output("+", 1);
+	else if (flags & FLAG_SPACE)
+		add_to_output(" ", 1);
+
+	len = _strlen(*p);
+
+	if (precision > len)
+		pad_left(p, precision - len, '0');
+
+	if (flags & FLAG_ZERO && precision <= 0 && width > len + sign)
+		pad_left(p, width - len - sign, '0');
+
+	if (width > len + sign)
+		pad_left(p, width - len - sign, ' ');
+}
+
+/**
+ * write_to_output - ..
+ * @p: ...
+ *  Return: ...
+ */
+void write_to_output(char *p)
+{
+	add_to_output(p, _strlen(p));
+}
+
+/**
+ * add_to_output - ..
+ * @str: ...
+ * @len: ...
+ * Return: ...
+ */
+void add_to_output(char *str, int len)
+{
+	write(STDOUT_FILENO, str, len);
 }
