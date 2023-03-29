@@ -13,6 +13,11 @@ void print_char(va_list args, int *count)
 {
 	char c = (char) va_arg(args, int);
 
+	if (c < 32 || c > 126)
+	{
+		return;
+	}
+
 	write(STDOUT_FILENO, &c, 1);
 	(*count)++;
 }
