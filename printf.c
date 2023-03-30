@@ -13,6 +13,8 @@ int _printf(const char *format, ...)
 
 	va_start(args, format);
 
+	if (format == NULL)
+		return (-1);
 	while (*format != '\0')
 	{
 		if (*format == '%')
@@ -25,18 +27,15 @@ int _printf(const char *format, ...)
 				case 's':
 					print_string(args, &count);
 					break;
-
 				case 'i':
 				case 'd':
 					print_d(args, &count);
 					break;
-
 				case '%':
 					{
 						print_percent(&count);
 						break;
 					}
-
 			}
 		} else
 		{
@@ -48,4 +47,3 @@ int _printf(const char *format, ...)
 	va_end(args);
 	return (count);
 }
-

@@ -6,8 +6,7 @@
  * @args: ...
  * @width: ...
  * @precision: ...
- * @flags: ...
- * @length: ...
+ * @flags: ...`
  *
  * Return: Always 0 (Success)
  */
@@ -17,6 +16,8 @@ int _print_integer(va_list args, int width,
 {
 	int n = va_arg(args, int);
 	int sign = 1;
+
+	char buffer[BUFFER_SIZE];
 	char *p;
 
 	if (n < 0)
@@ -25,28 +26,30 @@ int _print_integer(va_list args, int width,
 		n = n * -1;
 	}
 
-	p = int_to_string(n);
+	p = int_to_string(n, p);
 	apply_integer_flags(&p, sign, flags, width, precision);
 	write_to_output(p);
-	free(p);
 
-	return (_strlen(p));
+	return (p - buffer);
 }
 
 /**
  * int_to_string - ..
  * @n: ...
+ * @p: ...
  * Return: ...
  */
-char *int_to_string(int n)
+char *int_to_string(int n, char *p)
 {
 	int dig = num_count(n);
 	int i;
-	char *p = (char *) malloc(sizeof(char) * (dig + 1));
+	char *q;
 
-	if (p == NULL)
+	if (n == 0)
 	{
-		exit(1);
+		*(p++) = '0';
+		*(p) = '\0'; /* add null terminatorn */
+		return (p);
 	}
 
 	for (i = dig - 1; i >= 0; i--)
@@ -54,7 +57,23 @@ char *int_to_string(int n)
 		*(p + i) = '0' + n % 10;
 		n = n / 10;
 	}
-	*(p + dig) = '\0';
+	*(p + dig) = '\0'; /* add null terminator */
+
+	/* Reverse the string */
+	q = p;
+
+	while (*q != '\0')
+	{
+		q--;
+	}
+	q++;
+
+	while (p < q)
+	{
+		char temp = *p;
+		*p++ = *q;
+		*q-- = temp;
+	}
 
 	return (p);
 }
@@ -62,25 +81,31 @@ char *int_to_string(int n)
 void apply_integer_flags(char **p, int sign,
 		int flags, int width, int precision)
 {
-	int len = 0;
+	char buffer[BUFFER_SIZE];
+	char *q = buffer;
+	int len;
 
 	if (sign == -1)
-		add_to_output("-", 1);
+		*(q++) = '-';
 	else if (flags & FLAG_PLUS)
-		add_to_output("+", 1);
+		*(q++) = '+';
 	else if (flags & FLAG_SPACE)
-		add_to_output(" ", 1);
+		*(q++) = ' ';
 
 	len = _strlen(*p);
 
 	if (precision > len)
-		pad_left(p, precision - len, '0');
+		pad_left(&q, precision - len, '0');
 
 	if (flags & FLAG_ZERO && precision <= 0 && width > len + sign)
-		pad_left(p, width - len - sign, '0');
+		pad_left(&q, width - len - sign, '0');
 
 	if (width > len + sign)
-		pad_left(p, width - len - sign, ' ');
+		pad_left(&q, width - len - sign, ' ');
+
+	*q = '\0';
+
+	write_to_output(buffer);
 }
 
 /**
@@ -90,7 +115,7 @@ void apply_integer_flags(char **p, int sign,
  */
 void write_to_output(char *p)
 {
-	add_to_output(p, _strlen(p));
+	write(STDOUT_FILENO, p, _strlen(p));
 }
 
 /**

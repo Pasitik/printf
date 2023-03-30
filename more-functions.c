@@ -35,13 +35,12 @@ void print_string(va_list args, int *count)
 	char *s = va_arg(args, char *);
 	int len;
 
-	if (s == NULL)
-		return;
-
+	if (s != NULL)
+	{
 	len = _strlen(s);
-
 	write(STDOUT_FILENO, s, len);
 	(*count) += len;
+	}
 }
 
 /**
@@ -69,7 +68,20 @@ void print_percent(int *count)
 void print_d(va_list args, int *count)
 {
 	int width = 0, precision = -1, flags = 0;
-	int printed = _print_integer(args, width, precision, flags);
+	int n = va_arg(args, int);
+	int sign = 1;
+	char buffer[BUFFER_SIZE];
+	char *p = buffer;
 
-	*count += printed;
+	if (n < 0)
+	{
+		sign = -1;
+		n = n * -1;
+	}
+
+	p = int_to_string(n, p);
+	apply_integer_flags(&p, sign, flags, width, precision);
+	write_to_output(p);
+
+	*count += p - buffer;
 }

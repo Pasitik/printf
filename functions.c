@@ -12,16 +12,14 @@
 
 void pad_left(char **str, int width, char pad)
 {
-	int len = _strlen(*str);
-	char *new_str = malloc(sizeof(char) * (len + width + 1));
+	char buffer[BUFFER_SIZE];
+	char *p = buffer;
 
-	if (new_str == NULL)
-		exit(1);
+	int len = *str - buffer;
 
-	_memset(new_str, pad, width);
-	_memcpy(new_str + width, *str, len + 1);
-	free(*str);
-	*str = new_str;
+	_memset(p, pad, width);
+	_memcpy(p + width, *str, len + 1);
+	*str = p + width + len;
 }
 
 /**
